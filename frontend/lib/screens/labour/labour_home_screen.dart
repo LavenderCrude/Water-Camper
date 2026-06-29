@@ -38,6 +38,7 @@ class _LabourHomeScreenState extends State<LabourHomeScreen> {
     final reportProvider = context.watch<DailyReportProvider>();
     final report = reportProvider.report;
     final auth = context.watch<AuthProvider>();
+    final submitted = report?.isSubmitted ?? false;
 
     if (reportProvider.isLoading && report == null) {
       return const Scaffold(
@@ -47,72 +48,72 @@ class _LabourHomeScreenState extends State<LabourHomeScreen> {
       );
     }
 
-    if (report?.isSubmitted == true) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text("Daily Report"),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.logout),
-              onPressed: () async {
-                await auth.logout();
+    // if (report?.isSubmitted == true) {
+    //   return Scaffold(
+    //     appBar: AppBar(
+    //       title: const Text("Daily Report"),
+    //       actions: [
+    //         IconButton(
+    //           icon: const Icon(Icons.logout),
+    //           onPressed: () async {
+    //             await auth.logout();
 
-                if (context.mounted) {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const LoginScreen(),
-                    ),
-                    (route) => false,
-                  );
-                }
-              },
-            ),
-          ],
-        ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.check_circle,
-                  color: Colors.green[600],
-                  size: 80,
-                ),
-                const SizedBox(height: 15),
-                const Text(
-                  "Report Submitted!",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "Date : ${report!.date}",
-                  style: const TextStyle(fontSize: 16),
-                ),
-                const SizedBox(height: 25),
-                _SummaryRow(
-                  "Delivered",
-                  "${report.totalDelivered}",
-                ),
-                _SummaryRow(
-                  "Undelivered",
-                  "${report.totalUndelivered}",
-                ),
-                _SummaryRow(
-                  "Collection",
-                  "₹${report.totalCollectedAmount.toStringAsFixed(0)}",
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
+    //             if (context.mounted) {
+    //               Navigator.pushAndRemoveUntil(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                   builder: (_) => const LoginScreen(),
+    //                 ),
+    //                 (route) => false,
+    //               );
+    //             }
+    //           },
+    //         ),
+    //       ],
+    //     ),
+    //     body: Center(
+    //       child: Padding(
+    //         padding: const EdgeInsets.all(24),
+    //         child: Column(
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           children: [
+    //             Icon(
+    //               Icons.check_circle,
+    //               color: Colors.green[600],
+    //               size: 80,
+    //             ),
+    //             const SizedBox(height: 15),
+    //             const Text(
+    //               "Report Submitted!",
+    //               style: TextStyle(
+    //                 fontSize: 24,
+    //                 fontWeight: FontWeight.bold,
+    //               ),
+    //             ),
+    //             const SizedBox(height: 10),
+    //             Text(
+    //               "Date : ${report!.date}",
+    //               style: const TextStyle(fontSize: 16),
+    //             ),
+    //             const SizedBox(height: 25),
+    //             _SummaryRow(
+    //               "Delivered",
+    //               "${report.totalDelivered}",
+    //             ),
+    //             _SummaryRow(
+    //               "Undelivered",
+    //               "${report.totalUndelivered}",
+    //             ),
+    //             _SummaryRow(
+    //               "Collection",
+    //               "₹${report.totalCollectedAmount.toStringAsFixed(0)}",
+    //             ),
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
 
     final steps = [
       _StepInfo(
@@ -214,89 +215,103 @@ class _LabourHomeScreenState extends State<LabourHomeScreen> {
           const SizedBox(height: 8),
           _WorkflowTile(
             step: steps[0],
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const FilledOutScreen(),
-                ),
-              );
-            },
+            onTap: submitted
+                ? null
+                : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const FilledOutScreen(),
+                      ),
+                    );
+                  },
           ),
           _WorkflowTile(
             step: steps[1],
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const DeliveryScreen(),
-                ),
-              );
-            },
+            onTap: submitted
+                ? null
+                : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const DeliveryScreen(),
+                      ),
+                    );
+                  },
           ),
           _WorkflowTile(
             step: steps[2],
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const QuantityScreen(
-                    type: QuantityType.extra,
-                    title: 'Extra Campers',
-                  ),
-                ),
-              );
-            },
+            onTap: submitted
+                ? null
+                : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const QuantityScreen(
+                          type: QuantityType.extra,
+                          title: 'Extra Campers',
+                        ),
+                      ),
+                    );
+                  },
           ),
           _WorkflowTile(
             step: steps[3],
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const QuantityScreen(
-                    type: QuantityType.notReceived,
-                    title: 'Not Received',
-                  ),
-                ),
-              );
-            },
+            onTap: submitted
+                ? null
+                : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const QuantityScreen(
+                          type: QuantityType.notReceived,
+                          title: 'Not Received',
+                        ),
+                      ),
+                    );
+                  },
           ),
           _WorkflowTile(
             step: steps[4],
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const QuantityScreen(
-                    type: QuantityType.emptyIn,
-                    title: 'Empty Campers Received',
-                  ),
-                ),
-              );
-            },
+            onTap: submitted
+                ? null
+                : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const QuantityScreen(
+                          type: QuantityType.emptyIn,
+                          title: 'Empty Campers Received',
+                        ),
+                      ),
+                    );
+                  },
           ),
           _WorkflowTile(
             step: steps[5],
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const PaymentScreen(),
-                ),
-              );
-            },
+            onTap: submitted
+                ? null
+                : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const PaymentScreen(),
+                      ),
+                    );
+                  },
           ),
           _WorkflowTile(
             step: steps[6],
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const SubmitScreen(),
-                ),
-              );
-            },
+            onTap: submitted
+                ? null
+                : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const SubmitScreen(),
+                      ),
+                    );
+                  },
           ),
         ],
       ),
@@ -318,7 +333,7 @@ class _StepInfo {
 
 class _WorkflowTile extends StatelessWidget {
   final _StepInfo step;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const _WorkflowTile({
     required this.step,
@@ -330,6 +345,7 @@ class _WorkflowTile extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
+        enabled: onTap != null,
         onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
@@ -344,15 +360,22 @@ class _WorkflowTile extends StatelessWidget {
         ),
         title: Text(
           step.title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
+            color: onTap == null ? Colors.grey : null,
           ),
         ),
-        trailing: const Icon(
-          Icons.chevron_right,
-          size: 32,
-        ),
+        trailing: onTap == null
+            ? const Icon(
+                Icons.lock,
+                color: Colors.red,
+                size: 28,
+              )
+            : const Icon(
+                Icons.chevron_right,
+                size: 32,
+              ),
       ),
     );
   }

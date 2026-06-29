@@ -38,20 +38,35 @@ const verifyLabourAccess = (report, labourId) => {
 
 const updateQuantityEntry = (entries, customerId, delta) => {
   const list = [...entries];
-  const idx = list.findIndex((e) => e.customerId.toString() === customerId);
+
+  const idx = list.findIndex((e) => {
+    const id = e.customerId?._id
+      ? e.customerId._id.toString()
+      : e.customerId.toString();
+
+    return id === customerId.toString();
+  });
+
   if (idx >= 0) {
     const newQty = list[idx].quantity + delta;
+
     if (newQty <= 0) {
       list.splice(idx, 1);
     } else {
-      list[idx] = { ...list[idx], quantity: newQty };
+      list[idx] = {
+        customerId,
+        quantity: newQty,
+      };
     }
   } else if (delta > 0) {
-    list.push({ customerId, quantity: delta });
+    list.push({
+      customerId,
+      quantity: delta,
+    });
   }
+
   return list;
 };
-
 const computeTotals = (report) => {
   const totalDelivered = report.deliveries.filter(
     (d) => d.status === 'delivered'

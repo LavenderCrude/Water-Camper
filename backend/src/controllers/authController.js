@@ -2,6 +2,18 @@ const authService = require('../services/authService');
 const { sendSuccess } = require('../utils/response');
 
 const authController = {
+  register: async (req, res) => {
+    const { name, mobile, password } = req.body;
+
+    const result = await authService.register({
+      name,
+      mobile,
+      password,
+    });
+
+    sendSuccess(res, result, 'Registration successful');
+  },
+
   login: async (req, res) => {
     const { mobile, password } = req.validated.body;
     const result = await authService.login(mobile, password);

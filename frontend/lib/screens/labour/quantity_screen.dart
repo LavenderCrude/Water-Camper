@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/customer_provider.dart';
 import '../../providers/daily_report_provider.dart';
 import '../../widgets/counter_button.dart';
+import '../../models/daily_report.dart';
 
 enum QuantityType { extra, notReceived, emptyIn }
 
@@ -30,22 +31,29 @@ class _QuantityScreenState extends State<QuantityScreen> {
     }
   }
 
-  List<dynamic> get _entries {
-    final report = context.read<DailyReportProvider>().report;
+  List<dynamic> _entries(DailyReportModel? report) {
     if (report == null) return [];
+
     switch (widget.type) {
       case QuantityType.extra:
         return report.extra;
+
       case QuantityType.notReceived:
         return report.notReceived;
+
       case QuantityType.emptyIn:
         return report.emptyIn;
     }
   }
 
-  int _getQuantity(String customerId) {
+  int _getQuantity(
+    DailyReportModel? report,
+    String customerId,
+  ) {
     try {
-      return _entries.firstWhere((e) => e.customerId == customerId).quantity;
+      return _entries(report)
+          .firstWhere((e) => e.customerId == customerId)
+          .quantity;
     } catch (_) {
       return 0;
     }
@@ -53,12 +61,25 @@ class _QuantityScreenState extends State<QuantityScreen> {
 
   Future<void> _update(String customerId, int delta) async {
     final provider = context.read<DailyReportProvider>();
-    await provider.updateQuantity(_endpoint, customerId, delta);
-    if (mounted) setState(() {});
+
+    final ok = await provider.updateQuantity(
+      _endpoint,
+      customerId,
+      delta,
+    );
+
+    print(provider.report!.extra.map((e) {
+      return "${e.customerId} -> ${e.quantity}";
+    }).toList());
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final report = context.watch<DailyReportProvider>().report;
     final customers = context.watch<CustomerProvider>().customers;
     final filtered = customers
         .where((c) => c.name.toLowerCase().contains(_search.toLowerCase()))
@@ -83,7 +104,7 @@ class _QuantityScreenState extends State<QuantityScreen> {
               itemCount: filtered.length,
               itemBuilder: (context, index) {
                 final customer = filtered[index];
-                final qty = _getQuantity(customer.id);
+                final qty = _getQuantity(report, customer.id);
                 return CounterRow(
                   label: customer.name,
                   value: qty,

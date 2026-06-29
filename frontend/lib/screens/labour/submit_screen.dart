@@ -12,8 +12,12 @@ class SubmitScreen extends StatelessWidget {
         title: const Text('Submit Daily Report?'),
         content: const Text('Once submitted, the report cannot be edited.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-          ElevatedButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Submit')),
+          TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: const Text('Cancel')),
+          ElevatedButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: const Text('Submit')),
         ],
       ),
     );
@@ -26,10 +30,18 @@ class SubmitScreen extends StatelessWidget {
     if (!context.mounted) return;
 
     if (success) {
+      await provider.fetchTodayReport();
+
+      if (!context.mounted) return;
+
+      Navigator.pop(context);
+
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Report submitted successfully!')),
+        const SnackBar(
+          content: Text("Report submitted successfully!"),
+          duration: Duration(seconds: 2),
+        ),
       );
-      Navigator.of(context).popUntil((route) => route.isFirst);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(provider.error ?? 'Submit failed')),
@@ -45,8 +57,10 @@ class SubmitScreen extends StatelessWidget {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final delivered = report.deliveries.where((d) => d.status == 'delivered').length;
-    final undelivered = report.deliveries.where((d) => d.status == 'undelivered').length;
+    final delivered =
+        report.deliveries.where((d) => d.status == 'delivered').length;
+    final undelivered =
+        report.deliveries.where((d) => d.status == 'undelivered').length;
     final emptyIn = report.emptyIn.fold(0, (s, e) => s + e.quantity);
     final extra = report.extra.fold(0, (s, e) => s + e.quantity);
     final notReceived = report.notReceived.fold(0, (s, e) => s + e.quantity);
@@ -59,9 +73,11 @@ class SubmitScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('Daily Summary', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            const Text('Daily Summary',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text('Date: ${report.date}', style: const TextStyle(fontSize: 16, color: Colors.grey)),
+            Text('Date: ${report.date}',
+                style: const TextStyle(fontSize: 16, color: Colors.grey)),
             const SizedBox(height: 24),
             _Row('Filled Out', '${report.filledOut}'),
             _Row('Delivered', '$delivered'),
@@ -102,7 +118,9 @@ class _Row extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: const TextStyle(fontSize: 18)),
-          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text(value,
+              style:
+                  const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ],
       ),
     );

@@ -61,6 +61,40 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> register({
+    required String name,
+    required String mobile,
+    required String password,
+  }) async {
+    _loading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      debugPrint("Calling /auth/register API");
+
+      await _api.post(
+        '/auth/register',
+        body: {
+          'name': name,
+          'mobile': mobile,
+          'password': password,
+        },
+      );
+
+      debugPrint("/auth/register API Success");
+
+      _loading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = e.toString().replaceAll('ApiException: ', '');
+      _loading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
   Future<void> logout() async {
     _token = null;
     _user = null;
