@@ -28,6 +28,15 @@ const updateCustomerSchema = z.object({
   }),
 });
 
+const updateCustomerStatusSchema = z.object({
+  params: z.object({
+    id: z.string().min(1),
+  }),
+  body: z.object({
+    active: z.boolean(),
+  }),
+});
+
 const createLabourSchema = z.object({
   body: z.object({
     name: z.string().min(1, 'Name is required'),
@@ -56,7 +65,10 @@ const quantitySchema = z.object({
   params: z.object({ id: z.string().min(1) }),
   body: z.object({
     customerId: z.string().min(1),
-    delta: z.number().int().refine((v) => v === 1 || v === -1, 'Delta must be 1 or -1'),
+    delta: z
+      .number()
+      .int()
+      .refine((v) => v === 1 || v === -1, 'Delta must be 1 or -1'),
   }),
 });
 
@@ -92,6 +104,7 @@ module.exports = {
   loginSchema,
   createCustomerSchema,
   updateCustomerSchema,
+  updateCustomerStatusSchema,
   createLabourSchema,
   filledOutSchema,
   deliverySchema,

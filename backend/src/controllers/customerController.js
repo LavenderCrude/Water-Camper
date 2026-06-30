@@ -3,18 +3,28 @@ const { sendSuccess } = require('../utils/response');
 
 const customerController = {
   create: async (req, res) => {
-    const customer = await customerService.create(req.user._id, req.validated.body);
+    const customer = await customerService.create(
+      req.user._id,
+      req.validated.body
+    );
     sendSuccess(res, customer, 'Customer created', 201);
   },
 
   getAll: async (req, res) => {
     const { search, active } = req.validated.query;
-    const customers = await customerService.getAll(req.user._id, search, active);
+    const customers = await customerService.getAll(
+      req.user._id,
+      search,
+      active
+    );
     sendSuccess(res, customers);
   },
 
   getById: async (req, res) => {
-    const customer = await customerService.getById(req.user._id, req.validated.params.id);
+    const customer = await customerService.getById(
+      req.user._id,
+      req.validated.params.id
+    );
     sendSuccess(res, customer);
   },
 
@@ -27,8 +37,23 @@ const customerController = {
     sendSuccess(res, customer, 'Customer updated');
   },
 
+  updateStatus: async (req, res) => {
+    const { active } = req.body;
+
+    const customer = await customerService.updateStatus(
+      req.user._id,
+      req.validated.params.id,
+      active
+    );
+
+    sendSuccess(res, customer, 'Customer status updated');
+  },
+
   delete: async (req, res) => {
-    const customer = await customerService.delete(req.user._id, req.validated.params.id);
+    const customer = await customerService.delete(
+      req.user._id,
+      req.validated.params.id
+    );
     sendSuccess(res, customer, 'Customer deactivated');
   },
 

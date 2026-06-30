@@ -236,6 +236,279 @@ class DashboardScreen extends StatelessWidget {
           ),
 
           const SizedBox(height: 30),
+
+          //==================================
+// WEEKLY DELIVERY CHART
+//==================================
+
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(.05),
+                  blurRadius: 18,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Weekly Deliveries",
+                          style: TextStyle(
+                            fontSize: 19,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          "Last 7 Days",
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 7,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        "Delivery",
+                        style: TextStyle(
+                          color: Color(0xff345CFF),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 25),
+                SizedBox(
+                  height: 220,
+                  child: provider.deliveryChart.isEmpty
+                      ? const Center(
+                          child: Text("No delivery data"),
+                        )
+                      : _BarChart(
+                          data: provider.deliveryChart,
+                          color: const Color(0xff345CFF),
+                        ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 25),
+
+          //==================================
+// REVENUE CHART
+//==================================
+
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(.05),
+                  blurRadius: 18,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Revenue Trend",
+                          style: TextStyle(
+                            fontSize: 19,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          "Last 7 Days",
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 7,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade50,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        "Revenue",
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 25),
+                SizedBox(
+                  height: 220,
+                  child: provider.revenueChart.isEmpty
+                      ? const Center(
+                          child: Text("No revenue data"),
+                        )
+                      : _LineChart(
+                          data: provider.revenueChart,
+                          color: Colors.green,
+                        ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 30),
+
+          const Text(
+            "Quick Actions",
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 18),
+
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 15,
+            crossAxisSpacing: 15,
+            childAspectRatio: 1.15,
+            children: [
+              _QuickActionCard(
+                title: "Add Customer",
+                icon: Icons.person_add_alt_1,
+                color: const Color(0xff345CFF),
+                onTap: () {
+                  // TODO
+                },
+              ),
+              _QuickActionCard(
+                title: "Add Labour",
+                icon: Icons.engineering,
+                color: Colors.orange,
+                onTap: () {
+                  // TODO
+                },
+              ),
+              _QuickActionCard(
+                title: "Daily Report",
+                icon: Icons.assignment_rounded,
+                color: Colors.green,
+                onTap: () {
+                  // TODO
+                },
+              ),
+              _QuickActionCard(
+                title: "Payments",
+                icon: Icons.payments_rounded,
+                color: Colors.purple,
+                onTap: () {
+                  // TODO
+                },
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 30),
+
+          const SizedBox(height: 30),
+
+          const Text(
+            "Recent Activity",
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 18),
+
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(.05),
+                  blurRadius: 18,
+                  offset: const Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                _ActivityTile(
+                  color: Colors.green,
+                  icon: Icons.check_circle,
+                  title: "125 Deliveries Completed",
+                  subtitle: "Today's successful deliveries",
+                ),
+                const Divider(height: 28),
+                _ActivityTile(
+                  color: Colors.blue,
+                  icon: Icons.payments,
+                  title: "₹${s.todayCollection.toStringAsFixed(0)} Collected",
+                  subtitle: "Today's payment collection",
+                ),
+                const Divider(height: 28),
+                _ActivityTile(
+                  color: Colors.orange,
+                  icon: Icons.inventory_2,
+                  title: "${s.emptyCampersReceived} Empty Campers Returned",
+                  subtitle: "Received from customers",
+                ),
+                const Divider(height: 28),
+                _ActivityTile(
+                  color: Colors.red,
+                  icon: Icons.warning_amber_rounded,
+                  title: "${s.undeliveredCount} Deliveries Pending",
+                  subtitle: "Need attention",
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 40),
         ],
       ),
     );
@@ -405,6 +678,127 @@ class _ModernStatCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _QuickActionCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _QuickActionCard({
+    required this.title,
+    required this.icon,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(22),
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.05),
+              blurRadius: 16,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 58,
+                width: 58,
+                decoration: BoxDecoration(
+                  color: color.withOpacity(.12),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Icon(
+                  icon,
+                  color: color,
+                  size: 30,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ActivityTile extends StatelessWidget {
+  final Color color;
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  const _ActivityTile({
+    required this.color,
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          height: 54,
+          width: 54,
+          decoration: BoxDecoration(
+            color: color.withOpacity(.12),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Icon(
+            icon,
+            color: color,
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

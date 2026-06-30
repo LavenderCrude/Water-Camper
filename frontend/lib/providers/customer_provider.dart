@@ -19,8 +19,10 @@ class CustomerProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
     try {
-      final res = await _api!.get('/customers', query: search != null ? {'search': search} : null);
-      _customers = (res['data'] as List).map((e) => CustomerModel.fromJson(e)).toList();
+      final res = await _api!
+          .get('/customers', query: search != null ? {'search': search} : null);
+      _customers =
+          (res['data'] as List).map((e) => CustomerModel.fromJson(e)).toList();
     } catch (e) {
       _error = e.toString().replaceAll('ApiException: ', '');
     }
@@ -34,7 +36,8 @@ class CustomerProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final res = await _api!.get('/customers/assigned');
-      _customers = (res['data'] as List).map((e) => CustomerModel.fromJson(e)).toList();
+      _customers =
+          (res['data'] as List).map((e) => CustomerModel.fromJson(e)).toList();
     } catch (e) {
       _error = e.toString().replaceAll('ApiException: ', '');
     }
@@ -57,6 +60,27 @@ class CustomerProvider extends ChangeNotifier {
   Future<bool> updateCustomer(String id, Map<String, dynamic> data) async {
     try {
       await _api!.put('/customers/$id', body: data);
+      await fetchCustomers();
+      return true;
+    } catch (e) {
+      _error = e.toString().replaceAll('ApiException: ', '');
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> updateCustomerStatus(
+    String id,
+    bool active,
+  ) async {
+    try {
+      await _api!.patch(
+        '/customers/$id/status',
+        body: {
+          'active': active,
+        },
+      );
+
       await fetchCustomers();
       return true;
     } catch (e) {

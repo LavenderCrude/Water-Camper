@@ -7,6 +7,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const {
   createCustomerSchema,
   updateCustomerSchema,
+  updateCustomerStatusSchema,
   idParamSchema,
   searchQuerySchema,
 } = require('../validators/schemas');
@@ -27,7 +28,11 @@ router.get(
   validate(searchQuerySchema),
   asyncHandler(customerController.getAll)
 );
-router.get('/assigned', requireRole('labour'), asyncHandler(customerController.getForLabour));
+router.get(
+  '/assigned',
+  requireRole('labour'),
+  asyncHandler(customerController.getForLabour)
+);
 router.get(
   '/:id',
   requireRole('owner'),
@@ -40,6 +45,14 @@ router.put(
   validate(updateCustomerSchema),
   asyncHandler(customerController.update)
 );
+
+router.patch(
+  '/:id/status',
+  requireRole('owner'),
+  validate(updateCustomerStatusSchema),
+  asyncHandler(customerController.updateStatus)
+);
+
 router.delete(
   '/:id',
   requireRole('owner'),

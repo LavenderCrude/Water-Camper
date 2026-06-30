@@ -3,7 +3,11 @@ const customerRepository = require('../repositories/customerRepository');
 
 const customerService = {
   create: async (ownerId, data) => {
-    return customerRepository.create({ ...data, ownerId, pendingAmount: data.pendingAmount || 0 });
+    return customerRepository.create({
+      ...data,
+      ownerId,
+      pendingAmount: data.pendingAmount || 0,
+    });
   },
 
   getAll: async (ownerId, search, active) => {
@@ -21,6 +25,14 @@ const customerService = {
   update: async (ownerId, id, data) => {
     await customerService.getById(ownerId, id);
     return customerRepository.update(id, data);
+  },
+
+  updateStatus: async (ownerId, id, active) => {
+    await customerService.getById(ownerId, id);
+
+    return customerRepository.update(id, {
+      active,
+    });
   },
 
   delete: async (ownerId, id) => {
